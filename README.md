@@ -1,4 +1,4 @@
-# FasterLongbow
+# BL3 FasterLongbow
 
 FasterLongbow makes Longbow grenades feel faster and more responsive by accelerating the grenade throw animation and shortening the pre-teleport delay, without changing other grenade delivery types.
 
