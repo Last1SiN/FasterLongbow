@@ -59,7 +59,7 @@ Remove old FasterLongbow test/probe builds or extracted FasterLongbow folders be
 
 ## Compatibility and license
 
-- Co-op support: **Unknown** — not yet validated.
+- Co-op support: **ClientSide** — tested with FasterLongbow installed only on the local player while the other co-op player did not have the mod installed.
 - Character scope: Longbow delivery timing is general, while the current throw-animation acceleration targets the tested **FL4K / Beastmaster** grenade animation assets.
 - License: **GPL-3.0**
 
