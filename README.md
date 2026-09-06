@@ -2,13 +2,6 @@
 
 **Borderlands 3 PythonSDK / Oak mod**
 
-Current release: **v1.1.3**
-
-> Installation-ready `.sdkmod` files are published under **Releases**.  
-> The files in this repository are the mod source.
-
----
-
 FasterLongbow makes Longbow grenades feel faster and more responsive by accelerating the grenade throw animation and shortening the pre-teleport delay, without changing other grenade delivery types.
 
 ## Features
