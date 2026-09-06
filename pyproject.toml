@@ -1,0 +1,21 @@
+[project]
+name = "FasterLongbow"
+version = "1.1.3"
+description = "Configurable Longbow grenade throw and pre-teleport timing for Borderlands 3. Speeds up equipped Longbow delivery without changing other grenade delivery types, enforces safe timing limits, and exposes the tested values through the Mod Menu."
+authors = [
+    { name = "Sol (ChatGPT, GPT-5.6 Sol)" }
+]
+maintainers = [
+    { name = "Last1SiN" }
+]
+
+[project.urls]
+Repository = "https://github.com/Last1SiN/FasterLongbow"
+
+[tool.sdkmod]
+name = "FasterLongbow"
+version = "1.1.3"
+license = { name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+download = "https://github.com/Last1SiN/FasterLongbow/releases/latest/download/FasterLongbow.sdkmod"
+coop_support = "Unknown"
+supported_games = ["BL3"]
