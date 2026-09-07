@@ -1,27 +1,20 @@
 # FasterLongbow
 
-**Мод PythonSDK / Oak для Borderlands 3**
+[English](README.md) | [Русский](README_RU.md)
 
-Текущий релиз: **v1.1.3**
-
-> Готовые к установке `.sdkmod` публикуются в разделе **Releases**.  
-> Файлы в репозитории являются исходниками мода.
-
----
-
-FasterLongbow делает Longbow-гранаты быстрее и отзывчивее: ускоряет анимацию броска гранаты и сокращает паузу перед телепортацией, не изменяя другие способы доставки гранат.
+FasterLongbow делает Longbow-гранаты в Borderlands 3 быстрее и отзывчивее: ускоряет анимацию броска и сокращает паузу перед телепортацией, не изменяя другие типы доставки гранат.
 
 ## Возможности
 
 - Работает только когда экипированная граната использует Longbow delivery.
 - Ускоряет протестированную анимацию броска Longbow-гранаты.
-- Сокращает паузу перед Longbow-телепортом.
-- Выводит все три параметра таймингов в Mod Menu.
-- Проверяет пользовательские значения перед применением.
+- Сокращает паузу перед Longbow-телепортацией.
+- Имеет отдельный параметр тайминга для Divider-style Longbow behavior.
+- Выводит все три параметра в Mod Menu.
+- Проверяет пользовательские и вручную отредактированные значения перед применением.
 - Восстанавливает временные runtime-изменения после завершения конкретного grenade action.
-- Не изменяет `SpawnAndThrowGrenade` notify.
-- Не использует action `PlayRate`, `OverridePlayRate` или CDO-хаки таймингов.
-- Нет обычного игрового спама в лог; мод пишет только ошибки.
+- Не изменяет другие типы доставки гранат.
+- При обычной работе пишет в лог только ошибки.
 
 ## Настройка
 
@@ -37,43 +30,35 @@ FasterLongbow делает Longbow-гранаты быстрее и отзывч
 - **Longbow Teleport Delay:** `0.11-0.50 с`
 - **Divider Longbow Teleport Delay:** `0.05-0.60 с`
 
-`Longbow Teleport Delay` жёстко ограничен минимумом **0.11 с**. В тестах меньшие значения ломали телепорт Longbow. Один и тот же минимум принудительно проверяется как ползунком Mod Menu, так и runtime-валидацией, включая значения, вручную вписанные в файл настроек.
+`Longbow Teleport Delay` жёстко ограничен минимумом **0.11 с**. В тестах меньшие значения могли ломать Longbow-телепортацию.
 
-Текущее ускорение throw-animation через RateScale использует протестированные animation assets **FL4K / Beastmaster**.
+Текущее ускорение throw-animation использует протестированные animation assets **FL4K / Beastmaster**. Сам тайминг Longbow delivery этими assets не ограничен.
 
 ## Требования
 
-- Borderlands 3.
-- [BL3 PythonSDK / Oak Mod Manager v1.11+ — актуальный стабильный релиз](https://github.com/bl-sdk/oak-mod-manager/releases/latest).
-- [Официальная инструкция по установке BL3 SDK](https://bl-sdk.github.io/oak-mod-db/).
+- Borderlands 3
+- [BL3 PythonSDK / Oak Mod Manager](https://github.com/bl-sdk/oak-mod-manager/releases/latest)
 
-Oak Mod Manager v1.11 уже включает необходимые **Mods Base 1.12**, **BL3 Mod Menu 1.8**, **pyunrealsdk 1.10.0** и **unrealsdk 3.2.0**. При использовании этого релиза или более новой совместимой версии Oak отдельно скачивать эти компоненты не нужно.
+Для установки и обновления SDK используйте [официальную инструкцию BL3 SDK / Oak](https://bl-sdk.github.io/oak-mod-db/).
 
-## Установка
+## Установка мода
 
-1. **Полностью закройте Borderlands 3.**
-2. Если BL3 PythonSDK / Oak ещё не установлен или его нужно обновить, откройте [актуальный стабильный релиз Oak Mod Manager](https://github.com/bl-sdk/oak-mod-manager/releases/latest). В разделе **Assets** скачайте именно **`bl3-sdk.zip`**, а не архивы `Source code`.
-3. Найдите корневую папку Borderlands 3. В Steam: **Библиотека -> ПКМ по Borderlands 3 -> Управление -> Просмотреть локальные файлы**. Распакуйте содержимое `bl3-sdk.zip` прямо в **корневую папку Borderlands 3**, согласившись на объединение папок/файлов и замену файлов при запросе. Полная процедура, включая Proton/Linux, находится в [официальной инструкции BL3 SDK](https://bl-sdk.github.io/oak-mod-db/).
-4. После установки/обновления SDK один раз запустите Borderlands 3 и убедитесь, что в главном меню появился новый пункт **MODS**.
-5. Скачайте актуальный **FasterLongbow** из [GitHub Releases](https://github.com/Last1SiN/FasterLongbow/releases/latest).
-6. Снова полностью закройте игру и скопируйте `FasterLongbow.sdkmod` **не распаковывая** в:
+1. Установите или обновите BL3 PythonSDK / Oak по официальной инструкции выше.
+2. Скачайте `FasterLongbow.sdkmod` из [GitHub Releases](https://github.com/Last1SiN/FasterLongbow/releases/latest).
+3. При полностью закрытой Borderlands 3 скопируйте `.sdkmod` целиком в `Borderlands 3\sdk_mods\`. Сам `.sdkmod` распаковывать не нужно.
+4. Запустите игру, откройте **MODS -> FasterLongbow**, включите мод и настройте его через **Options**.
 
-   `Borderlands 3\sdk_mods\`
-
-7. Запустите/перезапустите Borderlands 3, откройте **MODS -> FasterLongbow**, включите мод и откройте **Options** для настройки таймингов.
-
-Для обновления FasterLongbow замените существующий `FasterLongbow.sdkmod` новой версией файла и перезапустите игру.
-
-Перед установкой релиза удалите старые тестовые/probe-сборки FasterLongbow и старые распакованные папки FasterLongbow, чтобы одновременно загружалась только одна копия мода.
+Для обновления замените существующий `.sdkmod` новым файлом и перезапустите игру. Удалите старые test/probe-сборки и распакованные копии, чтобы загружался только один экземпляр FasterLongbow.
 
 ## Совместимость и лицензия
 
-- Кооператив: **Unknown** — сценарий, где мод установлен у клиента, но отсутствует у хоста, пока не проверен.
-- Персонажи: настройка Longbow delivery общая, а текущее ускорение throw-animation использует протестированные assets **FL4K / Beastmaster**.
+- Кооператив: **Unknown** — сценарий, где мод установлен только у клиента, а у хоста его нет, пока не проверен.
+- Другие типы доставки гранат намеренно не изменяются.
 - Лицензия: **GPL-3.0**
 
 ## Credits
 
-- **Development:** Sol / GPT-5.6 Sol
-- **Design, testing & QA:** Last1SiN
-- **BL3 PythonSDK / Oak Mod Manager:** создан [apple1417](https://github.com/apple1417) при участии проекта и контрибьюторов [BL-SDK](https://github.com/bl-sdk).
+**Development:** Sol / GPT-5.6 Sol  
+**Design, testing & QA:** Last1SiN
+
+**BL3 PythonSDK / Oak Mod Manager:** создан [apple1417](https://github.com/apple1417) при участии проекта и контрибьюторов [BL-SDK](https://github.com/bl-sdk).
