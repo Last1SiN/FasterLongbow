@@ -62,7 +62,7 @@ Oak Mod Manager v1.11 уже включает необходимые **Mods Base
 
 7. Запустите/перезапустите Borderlands 3, откройте **MODS -> FasterLongbow**, включите мод и откройте **Options** для настройки таймингов.
 
-Для обновления FasterLongbow замените существующий `FasterLongbow.sdkmod` новой версией и перезапустите игру.
+Для обновления FasterLongbow замените существующий `FasterLongbow.sdkmod` новой версией файла и перезапустите игру.
 
 Перед установкой релиза удалите старые тестовые/probe-сборки FasterLongbow и старые распакованные папки FasterLongbow, чтобы одновременно загружалась только одна копия мода.
 
@@ -74,6 +74,6 @@ Oak Mod Manager v1.11 уже включает необходимые **Mods Base
 
 ## Credits
 
-- **Создатель мода / код:** Sol (ChatGPT, GPT-5.6 Sol)
-- **QA / сопровождение:** [Last1SiN](https://github.com/Last1SiN)
+- **Development:** Sol / GPT-5.6 Sol
+- **Design, testing & QA:** Last1SiN
 - **BL3 PythonSDK / Oak Mod Manager:** создан [apple1417](https://github.com/apple1417) при участии проекта и контрибьюторов [BL-SDK](https://github.com/bl-sdk).
