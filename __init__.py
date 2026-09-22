@@ -91,7 +91,7 @@ _anim_patch: list[tuple[UObject, float, float]] = []
 _patch_owner: UObject | None = None
 
 _delivery_obj: UObject | None = None
-_delivery_patch: tuple[float, float, float, float] | None = None
+_delivery_patch: tuple[float, float, float | None, float | None] | None = None
 
 
 def _error(msg: str) -> None:
@@ -316,35 +316,37 @@ def _restore_owned_patch(owner: UObject | None = None) -> None:
     if _delivery_obj is not None and _delivery_patch is not None:
         old_long, old_divider, owned_long, owned_divider = _delivery_patch
 
-        try:
-            current_long = float(_delivery_obj.LongbowTeleportDelay)
-        except Exception:
-            current_long = None
-        if current_long is not None and math.isclose(
-            current_long,
-            owned_long,
-            rel_tol=1e-6,
-            abs_tol=1e-6,
-        ):
+        if owned_long is not None:
             try:
-                _delivery_obj.LongbowTeleportDelay = old_long
+                current_long = float(_delivery_obj.LongbowTeleportDelay)
             except Exception:
-                pass
+                current_long = None
+            if current_long is not None and math.isclose(
+                current_long,
+                owned_long,
+                rel_tol=1e-6,
+                abs_tol=1e-6,
+            ):
+                try:
+                    _delivery_obj.LongbowTeleportDelay = old_long
+                except Exception:
+                    pass
 
-        try:
-            current_divider = float(_delivery_obj.DividerLongbowTeleportDelay)
-        except Exception:
-            current_divider = None
-        if current_divider is not None and math.isclose(
-            current_divider,
-            owned_divider,
-            rel_tol=1e-6,
-            abs_tol=1e-6,
-        ):
+        if owned_divider is not None:
             try:
-                _delivery_obj.DividerLongbowTeleportDelay = old_divider
+                current_divider = float(_delivery_obj.DividerLongbowTeleportDelay)
             except Exception:
-                pass
+                current_divider = None
+            if current_divider is not None and math.isclose(
+                current_divider,
+                owned_divider,
+                rel_tol=1e-6,
+                abs_tol=1e-6,
+            ):
+                try:
+                    _delivery_obj.DividerLongbowTeleportDelay = old_divider
+                except Exception:
+                    pass
 
     _patch_owner = None
     _anim_patch = []
@@ -381,20 +383,33 @@ def _apply_for_action(owner: UObject, grenade_mod: UObject) -> None:
         try:
             old_long = float(delivery.LongbowTeleportDelay)
             old_divider = float(delivery.DividerLongbowTeleportDelay)
-
-            delivery.LongbowTeleportDelay = long_delay
-            delivery.DividerLongbowTeleportDelay = divider_delay
-
-            _delivery_obj = delivery
-            _delivery_patch = (
-                old_long,
-                old_divider,
-                long_delay,
-                divider_delay,
-            )
-            delivery_changed = True
         except Exception as exc:
-            _error(f"delivery patch failed: {exc}")
+            _error(f"delivery baseline read failed: {exc}")
+        else:
+            owned_long: float | None = None
+            owned_divider: float | None = None
+
+            try:
+                delivery.LongbowTeleportDelay = long_delay
+                owned_long = long_delay
+            except Exception as exc:
+                _error(f"LongbowTeleportDelay patch failed: {exc}")
+
+            try:
+                delivery.DividerLongbowTeleportDelay = divider_delay
+                owned_divider = divider_delay
+            except Exception as exc:
+                _error(f"DividerLongbowTeleportDelay patch failed: {exc}")
+
+            if owned_long is not None or owned_divider is not None:
+                _delivery_obj = delivery
+                _delivery_patch = (
+                    old_long,
+                    old_divider,
+                    owned_long,
+                    owned_divider,
+                )
+                delivery_changed = True
 
     if anim_patch or delivery_changed:
         _anim_patch = anim_patch
