@@ -84,14 +84,14 @@ OPTIONS = (
     divider_delay_option,
 )
 
-_anim_assets: list[tuple[UObject, float]] = []
+_anim_assets: list[UObject] = []
 _anim_cache_ready = False
+_anim_patch: list[tuple[UObject, float, float]] = []
 
 _patch_owner: UObject | None = None
-_patch_active = False
 
 _delivery_obj: UObject | None = None
-_delivery_old: tuple[float, float] | None = None
+_delivery_patch: tuple[float, float, float | None, float | None] | None = None
 
 
 def _error(msg: str) -> None:
@@ -269,7 +269,7 @@ def _cache_anim_assets() -> bool:
     if _anim_cache_ready and _anim_assets:
         return True
 
-    found: list[tuple[UObject, float]] = []
+    found: list[UObject] = []
 
     try:
         loaded = list(unrealsdk.find_all("AnimSequenceBase", exact=False))
@@ -281,12 +281,7 @@ def _cache_anim_assets() -> bool:
         if _path(asset) not in TARGET_ASSETS:
             continue
 
-        try:
-            original = float(asset.RateScale)
-        except Exception:
-            continue
-
-        found.append((asset, original))
+        found.append(asset)
 
     if not found:
         return False
@@ -296,50 +291,84 @@ def _cache_anim_assets() -> bool:
     return True
 
 
-def _restore_owned_patch(reason: str, owner: UObject | None = None) -> None:
-    global _patch_owner, _patch_active
-    global _delivery_obj, _delivery_old
+def _restore_owned_patch(owner: UObject | None = None) -> None:
+    global _patch_owner, _anim_patch
+    global _delivery_obj, _delivery_patch
 
-    if not _patch_active:
+    if _patch_owner is None:
         return
 
     if owner is not None and _patch_owner is not owner:
         return
 
-    for asset, original in _anim_assets:
+    for asset, original, owned in _anim_patch:
         try:
-            asset.RateScale = original
+            current = float(asset.RateScale)
         except Exception:
-            pass
+            continue
 
-    if _delivery_obj is not None and _delivery_old is not None:
-        old_long, old_divider = _delivery_old
-        try:
-            _delivery_obj.LongbowTeleportDelay = old_long
-            _delivery_obj.DividerLongbowTeleportDelay = old_divider
-        except Exception:
-            pass
+        if math.isclose(current, owned, rel_tol=1e-6, abs_tol=1e-6):
+            try:
+                asset.RateScale = original
+            except Exception:
+                pass
+
+    if _delivery_obj is not None and _delivery_patch is not None:
+        old_long, old_divider, owned_long, owned_divider = _delivery_patch
+
+        if owned_long is not None:
+            try:
+                current_long = float(_delivery_obj.LongbowTeleportDelay)
+            except Exception:
+                current_long = None
+            if current_long is not None and math.isclose(
+                current_long,
+                owned_long,
+                rel_tol=1e-6,
+                abs_tol=1e-6,
+            ):
+                try:
+                    _delivery_obj.LongbowTeleportDelay = old_long
+                except Exception:
+                    pass
+
+        if owned_divider is not None:
+            try:
+                current_divider = float(_delivery_obj.DividerLongbowTeleportDelay)
+            except Exception:
+                current_divider = None
+            if current_divider is not None and math.isclose(
+                current_divider,
+                owned_divider,
+                rel_tol=1e-6,
+                abs_tol=1e-6,
+            ):
+                try:
+                    _delivery_obj.DividerLongbowTeleportDelay = old_divider
+                except Exception:
+                    pass
 
     _patch_owner = None
-    _patch_active = False
+    _anim_patch = []
     _delivery_obj = None
-    _delivery_old = None
+    _delivery_patch = None
 
 
 def _apply_for_action(owner: UObject, grenade_mod: UObject) -> None:
-    global _patch_owner, _patch_active
-    global _delivery_obj, _delivery_old
+    global _patch_owner, _anim_patch
+    global _delivery_obj, _delivery_patch
 
-    _restore_owned_patch("new action safety")
+    _restore_owned_patch()
 
     rate, long_delay, divider_delay = _current_values()
 
-    anim_changed = False
+    anim_patch: list[tuple[UObject, float, float]] = []
     if _cache_anim_assets():
-        for asset, _original in _anim_assets:
+        for asset in _anim_assets:
             try:
+                original = float(asset.RateScale)
                 asset.RateScale = rate
-                anim_changed = True
+                anim_patch.append((asset, original, rate))
             except Exception:
                 pass
     else:
@@ -354,23 +383,41 @@ def _apply_for_action(owner: UObject, grenade_mod: UObject) -> None:
         try:
             old_long = float(delivery.LongbowTeleportDelay)
             old_divider = float(delivery.DividerLongbowTeleportDelay)
-
-            _delivery_obj = delivery
-            _delivery_old = (old_long, old_divider)
-
-            delivery.LongbowTeleportDelay = long_delay
-            delivery.DividerLongbowTeleportDelay = divider_delay
-            delivery_changed = True
         except Exception as exc:
-            _error(f"delivery patch failed: {exc}")
+            _error(f"delivery baseline read failed: {exc}")
+        else:
+            owned_long: float | None = None
+            owned_divider: float | None = None
 
-    if anim_changed or delivery_changed:
+            try:
+                delivery.LongbowTeleportDelay = long_delay
+                owned_long = long_delay
+            except Exception as exc:
+                _error(f"LongbowTeleportDelay patch failed: {exc}")
+
+            try:
+                delivery.DividerLongbowTeleportDelay = divider_delay
+                owned_divider = divider_delay
+            except Exception as exc:
+                _error(f"DividerLongbowTeleportDelay patch failed: {exc}")
+
+            if owned_long is not None or owned_divider is not None:
+                _delivery_obj = delivery
+                _delivery_patch = (
+                    old_long,
+                    old_divider,
+                    owned_long,
+                    owned_divider,
+                )
+                delivery_changed = True
+
+    if anim_patch or delivery_changed:
+        _anim_patch = anim_patch
         _patch_owner = owner
-        _patch_active = True
 
 
 def _on_disable() -> None:
-    _restore_owned_patch("mod disable")
+    _restore_owned_patch()
 
 
 @hook(
@@ -408,7 +455,7 @@ def _action_end(
     _func: BoundFunction,
 ) -> None:
     if _patch_owner is obj:
-        _restore_owned_patch("owning Action OnEnd", owner=obj)
+        _restore_owned_patch(owner=obj)
 
 
 # Try to cache eagerly; OnBegin retries if the character assets are not loaded yet.

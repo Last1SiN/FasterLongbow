@@ -12,7 +12,7 @@ FasterLongbow makes Longbow grenades in Borderlands 3 feel faster and more respo
 - Provides a separate timing value for Divider-style Longbow behavior.
 - Exposes all three values in the Mod Menu.
 - Validates custom and manually edited settings before applying them.
-- Restores temporary runtime changes when the owning grenade action ends.
+- Restores temporary runtime changes when the owning grenade action ends without overwriting later external changes.
 - Does not modify other grenade delivery types.
 - Normal gameplay logging is limited to errors.
 
