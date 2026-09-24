@@ -2,19 +2,19 @@
 
 [English](README.md) | [Русский](README_RU.md)
 
-FasterLongbow makes Longbow grenades in Borderlands 3 feel faster and more responsive by accelerating the grenade throw animation and shortening the pre-teleport delay, without changing other grenade delivery types.
+FasterLongbow makes Longbow grenades feel less sluggish.
+
+The grenade leaves your hand faster and teleports sooner, while every other grenade delivery type is left alone. The default timings are tuned to feel quicker without breaking the teleport, and you can adjust them from the Mod Menu if you want.
 
 ## Features
 
-- Applies only when the equipped grenade uses Longbow delivery.
-- Accelerates the tested Longbow grenade throw animation.
-- Shortens the Longbow pre-teleport delay.
-- Provides a separate timing value for Divider-style Longbow behavior.
-- Exposes all three values in the Mod Menu.
-- Validates custom and manually edited settings before applying them.
-- Restores temporary runtime changes when the owning grenade action ends without overwriting later external changes.
-- Does not modify other grenade delivery types.
-- Normal gameplay logging is limited to errors.
+- Faster Longbow throw animation.
+- Shorter delay before the grenade teleports.
+- Separate timing for Divider-style Longbow grenades.
+- All three values can be adjusted in the Mod Menu.
+- Only affects Longbow delivery; other grenade types are untouched.
+- Keeps unsafe timing values from breaking the teleport.
+- Restores temporary animation changes after the throw is finished.
 
 ## Configuration
 
