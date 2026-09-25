@@ -48,7 +48,7 @@ Use the [official BL3 SDK / Oak installation guide](https://bl-sdk.github.io/oak
 3. With Borderlands 3 closed, copy the `.sdkmod` file intact to `Borderlands 3\sdk_mods\`. Do not extract the `.sdkmod` itself.
 4. Start the game, open **MODS -> FasterLongbow**, enable the mod and configure it under **Options**.
 
-To update FasterLongbow, replace the existing `.sdkmod` with the newer file and restart the game. Remove old test/probe builds or extracted copies so only one FasterLongbow instance can load.
+To update FasterLongbow, replace the existing `.sdkmod` with the newer file and restart the game.
 
 ## Compatibility and license
 
